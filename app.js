@@ -6,8 +6,14 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const fileUpload = require("express-fileupload")
 const errorHandlerMiddleare = require('./middleware/error-handler');
 const userRoutes = require('./routes/userRoute');
+const productRoutes = require('./routes/productRoute');
+const reviewRoutes = require('./routes/reviewRoute');
+
+
+
 const app = express();
 
 
@@ -16,9 +22,11 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(cookieParser());
-
+app.use(express.static('./public'));
+app.use(fileUpload());
 app.use('/api/v1/users', userRoutes);
-
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 const PORT = process.env.PORT || 5000;
 
 

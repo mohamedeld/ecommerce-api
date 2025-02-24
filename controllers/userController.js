@@ -108,7 +108,18 @@ const updateUser = async (req,res)=>{
   res.status(StatusCodes.OK).json({user});
 }
 
-
+const updateUserPassword = async (req,res)=>{
+  const {id} = req.params;
+  const {oldPassword, newPassword} = req.body;
+  const user = await User.findById(id);
+  const isPasswordCorrect = await user.comparePassword(oldPassword);
+  if(!isPasswordCorrect){
+    return res.status(StatusCodes.BAD_REQUEST).json({message:'Invalid credentials'});
+  }
+  user.password = newPassword;
+  await user.save();
+  res.status(StatusCodes.OK).json({message:'Password updated successfully'});
+}
 module.exports = {
   register,
   login,
@@ -118,5 +129,6 @@ module.exports = {
   getAllUsers,
   getSingleUser,
   currentUser,
-  updateUser
+  updateUser,
+  updateUserPassword
 }
